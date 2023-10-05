@@ -5,7 +5,6 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavBarComponent } from './administrador/nav-bar/nav-bar.component';
 import { PanelAdministradorComponent } from './administrador/panel-administrador/panel-administrador.component';
-import { CarrouselComponent } from './administrador/carrousel/carrousel.component';
 import { FooterComponent } from './administrador/footer/footer.component';
 import { ProductosComponent } from './administrador/productos/productos.component';
 import { Routes, RouterModule } from '@angular/router';
@@ -30,6 +29,8 @@ import { MenuAdministratorComponent } from './administrador/menu-administrator/m
 import { SalesListComponent } from './administrador/ventas/sales-list/sales-list.component';
 import { FilterPipe } from './administrador/ventas/pipes/filter.pipe';
 import { FormsModule } from '@angular/forms';
+
+
 const routes: Routes = [
   {path:'',component:PanelAdministradorComponent},
   {path:'Productos',component:ProductosComponent},
@@ -42,7 +43,6 @@ const routes: Routes = [
     AppComponent,
     NavBarComponent,
     PanelAdministradorComponent,
-    CarrouselComponent,
     FooterComponent,
     ProductosComponent,
     ClientesComponent,

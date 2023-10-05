@@ -26,7 +26,7 @@ const newProduct = (request, response) => {
     if (file != undefined) {
         const url = `http://localhost:3000/Images/${file.filename}`;
         //MANDAMOS A LA BD TODO LISTO
-        let query = "INSERT INTO products (model,brand,description,price,stock,date_register,date_updated,image) VALUES (?,?,?,?,?,?,?,?)"; //EL ID ES AUTOINCREMENTAL POR EL MOTOR DE LA BD
+        let query = "INSERT INTO products (model,brand,description,price,stock,date_register,date_updated,image) VALUES (?,?,?,?,?,?,?,?) "; //AGREGAR COMMIT EN LOS INSERT
         connection_1.default.query({
             query: query,
             values: [body.model, body.brand, body.description, body.price, body.stock, body.date_register, body.date_updated, url]

@@ -4,7 +4,7 @@ import connection from '../db/connection';
 
 
 export const getCustomers = (request:Request,response:Response)=>{
-  let queryTable = "SELECT * FROM customers";
+  let queryTable = "SELECT * FROM users WHERE isAdmin = false";
   let customerList:any[]=[];
   connection.query(queryTable).then((values)=>{
     if(values[0].length > 0){
@@ -18,8 +18,8 @@ export const getCustomers = (request:Request,response:Response)=>{
 
 export const newCustomer = (request:Request, response:Response)=>{
   let hashedPassword = '';
-  let query = "INSERT INTO customers VALUES (?,?,?,?,?)"
-  let queryControl = "SELECT email,dni FROM customers WHERE (email like ?) OR (dni = ?)";
+  let query = "INSERT INTO users(dni,name,surname,email,password,isAdmin) VALUES (?,?,?,?,?,?)"
+  let queryControl = "SELECT email,dni FROM users WHERE (email like ?) OR (dni = ?)";
   connection.query({
     query: queryControl,
     values: [request.body.email,request.body.dni]
@@ -29,7 +29,7 @@ export const newCustomer = (request:Request, response:Response)=>{
       console.log(hashedPassword) //contraseña encriptada
         connection.query({
           query: query,
-          values:[request.body.dni,request.body.name,request.body.surname,request.body.email,hashedPassword],
+          values:[request.body.dni,request.body.name,request.body.surname,request.body.email,hashedPassword,false],
         }).then(()=>{
           response.status(200).send({msg:'cliente registrador correctamente'})
         })
@@ -45,7 +45,7 @@ export const newCustomer = (request:Request, response:Response)=>{
 }
 
 export const updateCustomer = (request:Request, response:Response)=>{
-  let queryControl = "SELECT * FROM customers WHERE  dni = ?";
+  let queryControl = "SELECT * FROM users WHERE  dni = ? and isAdmin = false";
   connection.query({
     query: queryControl,
     values: [request.params.dni]
@@ -53,13 +53,13 @@ export const updateCustomer = (request:Request, response:Response)=>{
     if(value[0].length === 1){
       //ESTO SE EJECUTA SI EL cliente SE ENCONTRÓ VALUE[0] ESTA LA TUPLA ENCONTRADA EN LA BD
       //AHORA DEBEMOS SABER SI EL EMAIL NO ESTA REPETIDO EN OTRO cliente
-      let queryEmail = "SELECT email FROM customers WHERE email like ? AND dni <> ? "; //TRAIGO TODOS LOS EMAIL IGUALES AL NUEVO PERO DISTINTO AL cliente(YA QUE PUEDE NO ACTUALIZARLO)
+      let queryEmail = "SELECT email FROM users WHERE email like ? AND dni <> ? "; //TRAIGO TODOS LOS EMAIL IGUALES AL NUEVO PERO DISTINTO AL cliente(YA QUE PUEDE NO ACTUALIZARLO)
       connection.query({
         query: queryEmail,
         values: [request.body.email,request.params.dni]
       }).then((resp)=>{
         if(resp[0].length == 0){
-              let queryForUpdate= "UPDATE customers SET email = ?, password = ? WHERE dni = ?";
+              let queryForUpdate= "UPDATE users SET email = ?, password = ? WHERE dni = ? and isAdmin = false";
               let hashedPassword = '';
               bcrypt.hash(request.body.password,10).then((value)=> hashedPassword = value).finally(()=>{
               connection.query({
@@ -79,7 +79,7 @@ export const updateCustomer = (request:Request, response:Response)=>{
 }
 
 export const deleteCustomer = (request:Request, response:Response)=>{
-  let querySearch = "DELETE FROM customers WHERE dni = ?";
+  let querySearch = "DELETE FROM users WHERE dni = ? and isAdmin = false";
   connection.query({
     query: querySearch,
     values: [request.params.dni]
@@ -91,7 +91,7 @@ export const deleteCustomer = (request:Request, response:Response)=>{
 }
 
 export const getOneCustomer = (request:Request, response:Response)=>{
-  let querySearch = "SELECT * FROM customers WHERE dni = ?";
+  let querySearch = "SELECT * FROM users WHERE dni = ? and isAdmin = false";
   connection.query({
     query:querySearch,
     values: [request.params.dni]

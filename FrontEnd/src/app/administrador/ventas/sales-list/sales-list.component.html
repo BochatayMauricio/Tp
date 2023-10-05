@@ -9,7 +9,8 @@
         <thead class="text-center">
           <tr>
             <th>Dni Cliente</th>
-            <th>id Producto</th>
+            <th>Nombre Cliente</th>
+            <th>Producto</th>
             <th>Cantidad</th>
             <th>id Envio</th>
             <th>fecha Compra</th>
@@ -17,8 +18,9 @@
         </thead>
         <tbody *ngFor="let sales of salesList | filter:filterSales">
           <tr>
-            <td>{{sales.dniCustomer}}</td>
-            <td>{{sales.idProduct}}</td>
+            <td>{{sales.dni}}</td>
+            <td>{{sales.name}} {{sales.surname}}</td>
+            <td>{{sales.model}}</td>
             <td>{{sales.quantity}}</td>
             <td>{{sales.idShipping || 'sin envio'}}</td>
             <td>{{sales.dateSale}}</td>

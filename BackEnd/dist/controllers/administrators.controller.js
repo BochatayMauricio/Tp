@@ -7,7 +7,7 @@ exports.getOneAdministrator = exports.deleteAdministrator = exports.updateAdmini
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const connection_1 = __importDefault(require("../db/connection"));
 const getAdministrators = (request, response) => {
-    let queryTable = "SELECT * FROM administrators";
+    let queryTable = "SELECT * FROM users WHERE users.isAdmin = true";
     let administratorsList = [];
     connection_1.default.query(queryTable).then((values) => {
         if (values[0].length > 0) {
@@ -22,8 +22,8 @@ const getAdministrators = (request, response) => {
 exports.getAdministrators = getAdministrators;
 const newAdministrator = (request, response) => {
     let hashedPassword = '';
-    let query = "INSERT INTO administrators VALUES (?,?,?,?,?)";
-    let queryControl = "SELECT email,dni FROM administrators WHERE (email like ?) OR (dni = ?)";
+    let query = "INSERT INTO users(dni,name,surname,email,password,isAdmin) VALUES (?,?,?,?,?,?)";
+    let queryControl = "SELECT email,dni FROM users WHERE (email like ?) OR (dni = ?)";
     connection_1.default.query({
         query: queryControl,
         values: [request.body.email, request.body.dni]
@@ -33,7 +33,7 @@ const newAdministrator = (request, response) => {
                 console.log(hashedPassword); //contraseña encriptada
                 connection_1.default.query({
                     query: query,
-                    values: [request.body.dni, request.body.name, request.body.surname, request.body.email, hashedPassword],
+                    values: [request.body.dni, request.body.name, request.body.surname, request.body.email, hashedPassword, true],
                 }).then(() => {
                     response.status(200).send({ msg: 'Administrador registrador correctamente' });
                 })
@@ -49,7 +49,7 @@ const newAdministrator = (request, response) => {
 };
 exports.newAdministrator = newAdministrator;
 const updateAdministrator = (request, response) => {
-    let queryControl = "SELECT * FROM administrators WHERE  dni = ?";
+    let queryControl = "SELECT * FROM users WHERE  dni = ? and isAdmin = true";
     connection_1.default.query({
         query: queryControl,
         values: [request.params.dni]
@@ -57,13 +57,13 @@ const updateAdministrator = (request, response) => {
         if (value[0].length === 1) {
             //ESTO SE EJECUTA SI EL ADMINISTRADOR SE ENCONTRÓ VALUE[0] ESTA LA TUPLA ENCONTRADA EN LA BD
             //AHORA DEBEMOS SABER SI EL EMAIL NO ESTA REPETIDO EN OTRO ADMINISTRADOR
-            let queryEmail = "SELECT email FROM administrators WHERE email like ? AND dni <> ? "; //TRAIGO TODOS LOS EMAIL IGUALES AL NUEVO PERO DISTINTO AL ADMIN(YA QUE PUEDE NO ACTUALIZARLO)
+            let queryEmail = "SELECT email FROM users WHERE email like ? AND dni <> ? "; //TRAIGO TODOS LOS EMAIL IGUALES AL NUEVO PERO DISTINTO AL ADMIN(YA QUE PUEDE NO ACTUALIZARLO)
             connection_1.default.query({
                 query: queryEmail,
                 values: [request.body.email, request.params.dni]
             }).then((resp) => {
                 if (resp[0].length == 0) {
-                    let queryForUpdate = "UPDATE administrators SET email = ?, password = ? WHERE dni = ?";
+                    let queryForUpdate = "UPDATE users SET email = ?, password = ? WHERE dni = ?";
                     let hashedPassword = '';
                     bcrypt_1.default.hash(request.body.password, 10).then((value) => hashedPassword = value).finally(() => {
                         connection_1.default.query({
@@ -86,7 +86,7 @@ const updateAdministrator = (request, response) => {
 };
 exports.updateAdministrator = updateAdministrator;
 const deleteAdministrator = (request, response) => {
-    let querySearch = "DELETE FROM administrators WHERE dni = ?";
+    let querySearch = "DELETE FROM users WHERE dni = ? and isAdmin = true";
     connection_1.default.query({
         query: querySearch,
         values: [request.params.dni]
@@ -98,7 +98,7 @@ const deleteAdministrator = (request, response) => {
 };
 exports.deleteAdministrator = deleteAdministrator;
 const getOneAdministrator = (request, response) => {
-    let querySearch = "SELECT * FROM administrators WHERE dni = ?";
+    let querySearch = "SELECT * FROM users WHERE dni = ? and isAdmin = true";
     connection_1.default.query({
         query: querySearch,
         values: [request.params.dni]

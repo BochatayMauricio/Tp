@@ -12,28 +12,20 @@ CREATE TABLE `products` (
   `stock` int not null,
   `date_register` varchar(20) not null,
   `date_updated` varchar(20) null,
-  image varchar(45),
+  `image` varchar(100),
   PRIMARY KEY (`id`)
 );
 
-DROP TABLE IF EXISTS administrators;
-CREATE TABLE administrators(
+DROP TABLE IF EXISTS users;
+CREATE TABLE users(
+id int not null auto_increment,
 dni int not null,
 name varchar(20) not null,
 surname varchar(20) not null,
 email varchar(50) not null,
 password varchar(200) not null,
-PRIMARY KEY(dni)
-);
-
-DROP TABLE IF EXISTS customers;
-CREATE TABLE customers(
- dni int not null,
- name varchar(20) not null,
- surname varchar(20) not null,
- email varchar(50) not null,
- password varchar(20) not null,
- PRIMARY KEY(dni)
+isAdmin boolean not null,
+PRIMARY KEY(id)
 );
 
 DROP TABLE IF EXISTS domicile;
@@ -45,7 +37,7 @@ CREATE TABLE domicile (
 );
 DROP TABLE IF EXISTS shippings;
 CREATE TABLE shippings(
-	id int not null,
+	id int not null auto_increment,
     costForKm float not null,
     costShipping float not null,
     postalCode varchar(10) not null,
@@ -55,24 +47,24 @@ CREATE TABLE shippings(
 
 DROP TABLE IF EXISTS sales;
 CREATE TABLE sales(
- dniCustomer int not null,
+ idCustomer int not null,
  idProduct int not null,
  quantity int not null,
  idShipping int null,
  dateSale varchar(20) not null,
- PRIMARY KEY(dniCustomer,idProduct,dateSale),
- CONSTRAINT cust_sale_fk foreign key (dniCustomer) REFERENCES customers(dni) on update cascade,
+ PRIMARY KEY(idCustomer,idProduct,dateSale),
+ CONSTRAINT cust_sale_fk foreign key (idCustomer) REFERENCES users(id) on update cascade,
  CONSTRAINT prod_sale_fk foreign key (idProduct) REFERENCES products(id) on update cascade,
  CONSTRAINT ship_sale_fk foreign key (idShipping) REFERENCES shippings(id) on update cascade
 );
 
 DROP TABLE IF EXISTS publications;
 CREATE TABLE publications(
-	dniAdministrator int not null,
+	idAdministrator int not null,
     idProduct int not null,
     datePublication varchar(20) not null,
-    PRIMARY KEY(dniAdministrator,idProduct),
-    CONSTRAINT adm_pub_fk foreign key (dniAdministrator) REFERENCES administrators(dni) on update cascade,
+    PRIMARY KEY(idAdministrator,idProduct),
+    CONSTRAINT adm_pub_fk foreign key (idAdministrator) REFERENCES users(id) on update cascade,
     CONSTRAINT prod_pub_fk foreign key (idProduct) REFERENCES products(id) on update cascade
 );
 
@@ -81,17 +73,17 @@ INSERT INTO `products` (`model`, `brand`,`description`,`price`, `stock`,`date_re
   ('XS MAX','IPHONE','GAMA ALTA',605.00,2,'12/05/2022','12/08/2022');
 COMMIT;
 
-select * from administrators;
 select * from products;
 select * from sales;
-
-insert into sales (dniCustomer,idProduct,quantity,idShipping,dateSale) values
-	(44644784,7,1,null,'18/05/2021');
+select * from publications;
+select * from users;
+insert into sales (idCustomer,idProduct,quantity,idShipping,dateSale) values
+    (2,2,3,null,'29/09/2023');
 commit;
 
 
-insert into customers (dni,name,surname,email,password) values
-	(44644784,'maurico','bochatay','mauriboch@gmail.com','4464487Mauri');
+insert into users (dni,name,surname,email,password,isAdmin) values
+    (12345678,'Alfano','rodrgiuez','alfano@gmail.com','123Alfano',true),
+    (44644784,'Mauricio','Bochatay','mauribochatay@gmail.com','asdasdasdasda',false);
 commit;
 
-select * from customers;

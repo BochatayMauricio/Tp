@@ -1,4 +1,4 @@
-<form [formGroup]="productForm" (ngSubmit)="registrarForm()" enctype="multipart/form-data" method="post">
+<form [formGroup]="productForm" (ngSubmit)="registrarForm()">
   <div class="form-floating mb-3">
     <input type="texto" class="form-control" id="floatingPassword" placeholder="Marca" formControlName="brand">
     <label for="floatingPassword">Marca</label>
@@ -20,7 +20,7 @@
     <label for="floatingPassword">Description</label>
   </div>
   <div class="form-floating mb-3">
-    <input type="file" class="form-control" placeholder="imagen" formControlName="file" name="file">
+    <input type="file" name="file" class="form-control" placeholder="imagen" (change)="uploadFile($event)">
     <label for="file">Imagen</label>
   </div>
   <button [disabled]="!productForm.valid" class="btn btn-success">Registrar</button>

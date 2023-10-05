@@ -13,10 +13,10 @@ export class ProductoService {
 
   private prod: BehaviorSubject<product[]> = new BehaviorSubject<product[]>([]);
   constructor(private http:HttpClient){}
-  postProducto(product:product){
+  postProducto(formDataProduct:FormData){
     //ACA MANDAMOS MEDIANTE UN POST A LA API
-    console.log(product)
-    return this.http.post('http://localhost:3000/api/Products',product);
+    console.log(formDataProduct)
+    return this.http.post('http://localhost:3000/api/Products',formDataProduct);
   }
 
   retraiveProducts(){

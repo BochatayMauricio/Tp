@@ -7,7 +7,7 @@ exports.getOneCustomer = exports.deleteCustomer = exports.updateCustomer = expor
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const connection_1 = __importDefault(require("../db/connection"));
 const getCustomers = (request, response) => {
-    let queryTable = "SELECT * FROM customers";
+    let queryTable = "SELECT * FROM users WHERE isAdmin = false";
     let customerList = [];
     connection_1.default.query(queryTable).then((values) => {
         if (values[0].length > 0) {
@@ -22,8 +22,8 @@ const getCustomers = (request, response) => {
 exports.getCustomers = getCustomers;
 const newCustomer = (request, response) => {
     let hashedPassword = '';
-    let query = "INSERT INTO customers VALUES (?,?,?,?,?)";
-    let queryControl = "SELECT email,dni FROM customers WHERE (email like ?) OR (dni = ?)";
+    let query = "INSERT INTO users(dni,name,surname,email,password,isAdmin) VALUES (?,?,?,?,?,?)";
+    let queryControl = "SELECT email,dni FROM users WHERE (email like ?) OR (dni = ?)";
     connection_1.default.query({
         query: queryControl,
         values: [request.body.email, request.body.dni]
@@ -33,7 +33,7 @@ const newCustomer = (request, response) => {
                 console.log(hashedPassword); //contraseña encriptada
                 connection_1.default.query({
                     query: query,
-                    values: [request.body.dni, request.body.name, request.body.surname, request.body.email, hashedPassword],
+                    values: [request.body.dni, request.body.name, request.body.surname, request.body.email, hashedPassword, false],
                 }).then(() => {
                     response.status(200).send({ msg: 'cliente registrador correctamente' });
                 })
@@ -49,7 +49,7 @@ const newCustomer = (request, response) => {
 };
 exports.newCustomer = newCustomer;
 const updateCustomer = (request, response) => {
-    let queryControl = "SELECT * FROM customers WHERE  dni = ?";
+    let queryControl = "SELECT * FROM users WHERE  dni = ? and isAdmin = false";
     connection_1.default.query({
         query: queryControl,
         values: [request.params.dni]
@@ -57,13 +57,13 @@ const updateCustomer = (request, response) => {
         if (value[0].length === 1) {
             //ESTO SE EJECUTA SI EL cliente SE ENCONTRÓ VALUE[0] ESTA LA TUPLA ENCONTRADA EN LA BD
             //AHORA DEBEMOS SABER SI EL EMAIL NO ESTA REPETIDO EN OTRO cliente
-            let queryEmail = "SELECT email FROM customers WHERE email like ? AND dni <> ? "; //TRAIGO TODOS LOS EMAIL IGUALES AL NUEVO PERO DISTINTO AL cliente(YA QUE PUEDE NO ACTUALIZARLO)
+            let queryEmail = "SELECT email FROM users WHERE email like ? AND dni <> ? "; //TRAIGO TODOS LOS EMAIL IGUALES AL NUEVO PERO DISTINTO AL cliente(YA QUE PUEDE NO ACTUALIZARLO)
             connection_1.default.query({
                 query: queryEmail,
                 values: [request.body.email, request.params.dni]
             }).then((resp) => {
                 if (resp[0].length == 0) {
-                    let queryForUpdate = "UPDATE customers SET email = ?, password = ? WHERE dni = ?";
+                    let queryForUpdate = "UPDATE users SET email = ?, password = ? WHERE dni = ? and isAdmin = false";
                     let hashedPassword = '';
                     bcrypt_1.default.hash(request.body.password, 10).then((value) => hashedPassword = value).finally(() => {
                         connection_1.default.query({
@@ -86,7 +86,7 @@ const updateCustomer = (request, response) => {
 };
 exports.updateCustomer = updateCustomer;
 const deleteCustomer = (request, response) => {
-    let querySearch = "DELETE FROM customers WHERE dni = ?";
+    let querySearch = "DELETE FROM users WHERE dni = ? and isAdmin = false";
     connection_1.default.query({
         query: querySearch,
         values: [request.params.dni]
@@ -98,7 +98,7 @@ const deleteCustomer = (request, response) => {
 };
 exports.deleteCustomer = deleteCustomer;
 const getOneCustomer = (request, response) => {
-    let querySearch = "SELECT * FROM customers WHERE dni = ?";
+    let querySearch = "SELECT * FROM users WHERE dni = ? and isAdmin = false";
     connection_1.default.query({
         query: querySearch,
         values: [request.params.dni]
