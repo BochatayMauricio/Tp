@@ -1,0 +1,41 @@
+<header>
+  <div class="logo">
+    <a routerLink="/dashboard"><img width="100px" src="../../../assets/img/cuenta.png" alt="Logo"></a>
+  </div>
+  <nav>
+</nav>
+
+  <div class="btn-group" dropdown>
+    <button type="button" class="btn btn-outline-danger" routerLink="/dashboard/userProfile">{{user.name}}</button>
+    <button id="button-split" type="button" dropdownToggle class="btn btn-danger dropdown-toggle dropdown-toggle-split"
+      aria-controls="dropdown-split">
+      <span class="caret"></span>
+      <span class="sr-only visually-hidden">Split button!</span>
+    </button>
+    <ul id="dropdown-split" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-split">
+      <li role="menuitem"><a *ngIf="!user.isAdmin" class="dropdown-item">Modificar Perfil</a></li>
+      <li role="menuitem"><a *ngIf="!user.isAdmin" class="dropdown-item">Mis Compras</a></li>
+      <li role="menuitem"><a *ngIf="user.isAdmin" class="dropdown-item">Modificar Administradores</a></li>
+      <li role="menuitem"><a *ngIf="user.isAdmin" class="dropdown-item">Agregar Productos</a></li>
+
+      <li class="divider dropdown-divider"></li>
+      <li role="menuitem"><a class="dropdown-item" (click)="logOut()">LogOut</a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- <button class="btn btn-outline-danger" type="submit">LogOut</button> -->
+
+</header>
+
+
+
+<!-- <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+
+    <p></p>
+    <button class="btn btn-outline-primary">Produtos</button>
+    <button class="btn btn-outline-primary">Info Usuario</button>
+    
+
+</nav> -->

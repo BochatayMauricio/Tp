@@ -1,0 +1,49 @@
+<app-navbar></app-navbar>
+<body>
+  <div class="container text-left">
+  
+    <h2>Novedades {{usera?.name}}</h2>
+  
+    <app-products-carousel></app-products-carousel><br><br>
+  
+  
+  
+    <h2>Productos de Nuestra Seleccion</h2>
+  
+    <div class="card" *ngFor="let item of listProducts">
+      <img src="{{item.image}}" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">{{item.model}}</h5>
+        <p class="card-text">{{item.brand}}
+        </p>
+        <button class="btn btn-secondary" (click)="productInfo(template)" style="margin-right: 30%;">Ver Mas</button>
+  
+        <ng-template #template>
+          <div class="modal-header">
+            <h4 class="modal-title pull-left">{{item.model}}</h4>
+            <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+              <span aria-hidden="true" class="visually-hidden">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+  
+            <div class="modal-body-right">
+              {{item.brand}}
+              <img src="{{item.image}}" alt="">
+  
+            </div>
+            <div class="modal-body left">
+              {{item.description}}
+            </div>
+  
+          </div>
+        </ng-template>
+  
+        <button class="btn btn-success" (click)="findProduct(item)">Comprar</button>
+  
+      </div>
+    </div>
+  
+  </div>
+<app-footer></app-footer>
+</body>

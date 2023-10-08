@@ -1,0 +1,37 @@
+body {
+  background-image: url(https://images.pexels.com/photos/3183132/pexels-photo-3183132.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+  background-size: contain;
+  background-attachment: fixed;
+}
+h2 {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-style: oblique;
+  color: rgb(0, 0, 0);
+
+}
+
+
+.card {
+  width: 18rem;
+  border: 1px solid #ccc;
+  display: inline-block;
+  margin-left: 15px;
+  background-color: rgba(222, 184, 135, 0.63);
+}
+
+.card img {
+  height: auto;
+  background-size: contain;
+  background-position: center;
+}
+
+
+
+.modal-body {
+  display: flex;
+}
+
+.modal-body-right img {
+  width: 150px;
+
+}

@@ -1,0 +1,30 @@
+<app-navbar></app-navbar>
+<div class="container-wrapper">
+  <div class="container1">
+    <h2>{{newProduct?.model}}</h2>
+    <h6>{{newProduct?.brand}}</h6><br>
+    <img src="{{newProduct?.image}}" style="width: 30%;" alt="">
+  </div>
+  <div class="container2">
+    <p>DESCRIPCION {{newProduct?.description}}</p><br>
+    <p>PRECIO: ${{newProduct?.price}}</p><br>
+    <p>STOCK: {{newProduct?.stock}}</p><br>
+    <p>CREACION: {{newProduct?.date_register}}</p>
+    <button [disabled]="newProduct?.stock==0 " class="btn btn-outline-success">Agregar al Carrito</button>
+    <input type="number" [defaultValue]="1" class="amount" #amount>
+
+
+
+    <div class="rate">
+      <rating [max]="5" [(ngModel)]="y" [customTemplate]="tt"></rating>
+      <ng-template #tt let-i="index" let-v="value">
+        <button class="btn btn-{{i < v ? 'warning' : 'default'}}">
+          {{i < v ? '&#9733;' : '&#9734;' }} </button>
+      </ng-template>
+    </div>
+
+  </div>
+</div>
+<footer>
+  <app-footer></app-footer>
+</footer>
